@@ -1,15 +1,9 @@
-const bodyParser = require("body-parser");
 const express = require("express");
-const cors = require("cors");
 const app = express();
 const { default: mongoose } = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 const port = process.env.PORT || 3030;
-
-app.use(bodyParser.json());
-app.use(express.json({ extended: false }));
-app.use(cors());
 
 const books = require("./Book/books-route");
 const authRoute = require("./User/authentication");
