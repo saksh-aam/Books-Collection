@@ -11,7 +11,8 @@ app.use(bodyParser.json());
 app.use(express.json({ extended: false }));
 app.use(cors());
 
-const books = require("./Routes/books-route");
+const books = require("./Book/books-route");
+const authRoute = require("./User/authentication");
 
 let mongourl = process.env.MONGO_URL
 mongoose
@@ -27,4 +28,5 @@ mongoose
 app.get("/", (req, res) => {
     res.send("hello");
 });
+app.use("/api/user", authRoute);
 app.use("/api", books);

@@ -1,24 +1,15 @@
-const Books = require("../Model/books");
+const Books = require("./books");
+const { bookValidation } = require("../validation");
 const { default: mongoose } = require("mongoose");
-const Joi = require("joi");
-
-// Define book schema for input validation
-const bookSchema = Joi.object({
-    title: Joi.string().required(),
-    author: Joi.string().required(),
-    description: Joi.string().required(),
-    publishDate: Joi.date(),
-});
-
 
 // Create a new book
 module.exports.createBook = async (req, res) => {
     try {
-        const { error, value } = bookSchema.validate(req.body);
+        const { error } = bookValidation(req.body);
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
-        const book = new Books(value);
+        const book = new Books(req.body);
         await book.save();
         res.status(201).json(book);
     } catch (err) {
@@ -148,7 +139,7 @@ module.exports.getBookById = async (req, res) => {
 module.exports.updateBook = async (req, res) => {
     try {
         const book = await Books.findById(req.params.id);
-        const { error } = bookSchema.validate(req.body);
+        const { error } = bookValidation(req.body);
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
